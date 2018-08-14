@@ -274,7 +274,7 @@ std::tuple<int, int> DrmDevice::Init(const char *path, int num_displays) {
   // If no priority display were found then pick first available as primary and
   // for the others assign consecutive display_numbers.
   for (auto &conn : connectors_) {
-    if (conn->external() || conn->internal()) {
+    if (conn->state() == DRM_MODE_CONNECTED && (conn->external() || conn->internal())) {
       if (!found_primary) {
         conn->set_display(num_displays);
         displays_[num_displays] = num_displays;
