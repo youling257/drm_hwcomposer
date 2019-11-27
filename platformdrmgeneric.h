@@ -23,6 +23,12 @@
 #include <hardware/gralloc.h>
 #include <map>
 
+#include <drm/drm_fourcc.h>
+
+#ifndef DRM_FORMAT_INVALID
+#define DRM_FORMAT_INVALID 0
+#endif
+
 namespace android {
 
 class DrmGenericImporter : public Importer {
