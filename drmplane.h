@@ -42,6 +42,8 @@ class DrmPlane {
 
   uint32_t type() const;
 
+  bool IsFormatSupported(uint32_t format) const;
+
   const DrmProperty &crtc_property() const;
   const DrmProperty &fb_property() const;
   const DrmProperty &crtc_x_property() const;
@@ -65,6 +67,8 @@ class DrmPlane {
   uint32_t possible_crtc_mask_;
 
   uint32_t type_;
+
+  std::vector<uint32_t> formats_;
 
   DrmProperty crtc_property_;
   DrmProperty fb_property_;
