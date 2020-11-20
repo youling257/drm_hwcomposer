@@ -249,8 +249,6 @@ int DrmGenericImporter::ConvertBoInfo(buffer_handle_t handle,
 #endif
 #if GRALLOC_HANDLE_VERSION == 4
   bo->modifiers[0] = gr_handle->modifier;
-  bo->with_modifiers = gr_handle->modifier != DRM_FORMAT_MOD_NONE &&
-                       gr_handle->modifier != DRM_FORMAT_MOD_INVALID;
 #endif
 
   bo->usage = gr_handle->usage;
@@ -308,7 +306,10 @@ int DrmGenericImporter::ImportBuffer(buffer_handle_t handle, hwc_drm_bo_t *bo) {
     }
   }
 
-  if (!bo->with_modifiers)
+  bool has_modifiers = bo->modifiers[0] != DRM_FORMAT_MOD_NONE &&
+                       bo->modifiers[0] != DRM_FORMAT_MOD_INVALID;
+
+  if (!has_modifiers)
     ret = drmModeAddFB2(drm_->fd(), bo->width, bo->height, bo->format,
                         bo->gem_handles, bo->pitches, bo->offsets, &bo->fb_id,
                         0);
@@ -316,8 +317,7 @@ int DrmGenericImporter::ImportBuffer(buffer_handle_t handle, hwc_drm_bo_t *bo) {
     ret = drmModeAddFB2WithModifiers(drm_->fd(), bo->width, bo->height,
                                      bo->format, bo->gem_handles, bo->pitches,
                                      bo->offsets, bo->modifiers, &bo->fb_id,
-                                     bo->modifiers[0] ? DRM_MODE_FB_MODIFIERS
-                                                      : 0);
+                                     DRM_MODE_FB_MODIFIERS);
 
   if (ret) {
     ALOGE("could not create drm fb %d", ret);
