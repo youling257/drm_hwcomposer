@@ -99,7 +99,7 @@ static const struct droid_yuv_format droid_yuv_formats[] = {
 
 static int get_fourcc_yuv(int native, enum chroma_order chroma_order,
                           int chroma_step) {
-  for (int i = 0; i < ARRAY_SIZE(droid_yuv_formats); ++i)
+  for (size_t i = 0; i < ARRAY_SIZE(droid_yuv_formats); ++i)
     if (droid_yuv_formats[i].native == native &&
         droid_yuv_formats[i].chroma_order == chroma_order &&
         droid_yuv_formats[i].chroma_step == chroma_step)
@@ -109,7 +109,7 @@ static int get_fourcc_yuv(int native, enum chroma_order chroma_order,
 }
 
 static bool is_yuv(int native) {
-  for (int i = 0; i < ARRAY_SIZE(droid_yuv_formats); ++i)
+  for (size_t i = 0; i < ARRAY_SIZE(droid_yuv_formats); ++i)
     if (droid_yuv_formats[i].native == native)
       return true;
 
@@ -162,7 +162,7 @@ bool DrmGenericImporter::GetYuvPlaneInfo(int num_fds, buffer_handle_t handle,
   /* .chroma_step is the byte distance between the same chroma channel
    * values of subsequent pixels, assumed to be the same for Cb and Cr. */
   bo->format = get_fourcc_yuv(bo->hal_format, chroma_order, ycbcr.chroma_step);
-  if (bo->format == -1) {
+  if (bo->format == (uint32_t) -1) {
     ALOGW(
         "unsupported YUV format, native = %x, chroma_order = %s, chroma_step = "
         "%d",
@@ -256,7 +256,7 @@ int DrmGenericImporter::ImportBuffer(buffer_handle_t handle, hwc_drm_bo_t *bo) {
   }
 
   for (int i = 1; i < HWC_DRM_BO_MAX_PLANES; i++) {
-    int fd = bo->prime_fds[i];
+    uint32_t fd = bo->prime_fds[i];
     if (fd != 0) {
       if (fd != bo->prime_fds[0]) {
         ALOGE("Multiplanar FBs are not supported by this version of composer");
