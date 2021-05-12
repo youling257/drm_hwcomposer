@@ -29,6 +29,8 @@
 
 #include "cros_gralloc_handle.h"
 
+#define DRM_FORMAT_YVU420_ANDROID fourcc_code('9', '9', '9', '7')
+
 namespace android {
 
 Importer *Importer::CreateInstance(DrmResources *drm) {
@@ -53,11 +55,19 @@ int DrmMinigbmImporter::ConvertBoInfo(buffer_handle_t handle, hwc_drm_bo_t *bo) 
   bo->width = gr_handle->width;
   bo->height = gr_handle->height;
   bo->hal_format = gr_handle->droid_format;
+
   bo->format = gr_handle->format;
+  if (bo->format == DRM_FORMAT_YVU420_ANDROID)
+    bo->format = DRM_FORMAT_YVU420;
+
   bo->usage = gr_handle->usage;
-  bo->prime_fds[0] = gr_handle->fds[0];
-  bo->pitches[0] = gr_handle->strides[0];
-  bo->offsets[0] = gr_handle->offsets[0];
+
+  for (size_t i = 0; i < gr_handle->num_planes; i++) {
+    bo->modifiers[i] = gr_handle->format_modifier;
+    bo->prime_fds[i] = gr_handle->fds[i];
+    bo->pitches[i] = gr_handle->strides[i];
+    bo->offsets[i] = gr_handle->offsets[i];
+  }
 
   return 0;
 }
