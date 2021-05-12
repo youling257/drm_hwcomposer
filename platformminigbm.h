@@ -27,17 +27,8 @@ namespace android {
 
 class DrmMinigbmImporter : public DrmGenericImporter {
  public:
-  DrmMinigbmImporter(DrmResources *drm);
-  ~DrmMinigbmImporter() override;
-
-  int Init();
-
+  using DrmGenericImporter::DrmGenericImporter;
   int ConvertBoInfo(buffer_handle_t handle, hwc_drm_bo_t *bo) override;
-
- private:
-  DrmResources *drm_;
-
-  const gralloc_module_t *gralloc_;
 };
 
 }
