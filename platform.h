@@ -49,6 +49,9 @@ class Importer {
   // Note: This can be called from a different thread than ImportBuffer. The
   //       implementation is responsible for ensuring thread safety.
   virtual int ReleaseBuffer(hwc_drm_bo_t *bo) = 0;
+
+  // Convert platform-dependent buffer format to drm_hwc internal format.
+  virtual int ConvertBoInfo(buffer_handle_t handle, hwc_drm_bo_t *bo) = 0;
 };
 
 class Planner {

@@ -32,7 +32,7 @@ class DrmMinigbmImporter : public DrmGenericImporter {
 
   int Init();
 
-  int ImportBuffer(buffer_handle_t handle, hwc_drm_bo_t *bo) override;
+  int ConvertBoInfo(buffer_handle_t handle, hwc_drm_bo_t *bo) override;
 
  private:
   DrmResources *drm_;
