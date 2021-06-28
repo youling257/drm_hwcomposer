@@ -136,7 +136,7 @@ class DrmHwcTwo : public hwc2_device_t {
   class HwcDisplay {
    public:
     HwcDisplay(ResourceManager *resource_manager, DrmDevice *drm,
-               std::shared_ptr<Importer> importer, hwc2_display_t handle,
+               std::shared_ptr<Importer> importer, const gralloc_module_t *gralloc, hwc2_display_t handle,
                HWC2::DisplayType type);
     HwcDisplay(const HwcDisplay &) = delete;
     HWC2::Error Init(std::vector<DrmPlane *> *planes);
@@ -194,6 +194,7 @@ class DrmHwcTwo : public hwc2_device_t {
     DrmDisplayCompositor compositor_;
     std::shared_ptr<Importer> importer_;
     std::unique_ptr<Planner> planner_;
+    const gralloc_module_t *gralloc_;
 
     std::vector<DrmPlane *> primary_planes_;
     std::vector<DrmPlane *> overlay_planes_;
@@ -263,6 +264,7 @@ class DrmHwcTwo : public hwc2_device_t {
                                hwc2_function_pointer_t function);
 
   ResourceManager resource_manager_;
+  const gralloc_module_t *gralloc_;
   std::map<hwc2_display_t, HwcDisplay> displays_;
   std::map<HWC2::Callback, HwcCallback> callbacks_;
 };

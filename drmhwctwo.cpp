@@ -72,9 +72,16 @@ HWC2::Error DrmHwcTwo::Init() {
     return HWC2::Error::NoResources;
   }
 
+  ret = hw_get_module(GRALLOC_HARDWARE_MODULE_ID,
+                      (const hw_module_t **)&gralloc_);
+  if (ret) {
+    ALOGE("Failed to open gralloc module %d", ret);
+    return HWC2::Error::NoResources;
+  }
+
   displays_.emplace(std::piecewise_construct,
                     std::forward_as_tuple(HWC_DISPLAY_PRIMARY),
-                    std::forward_as_tuple(&resource_manager_, drm, importer,
+                    std::forward_as_tuple(&resource_manager_, drm, importer, gralloc_,
                                           HWC_DISPLAY_PRIMARY,
                                           HWC2::DisplayType::Physical));
 
@@ -156,10 +163,12 @@ HWC2::Error DrmHwcTwo::RegisterCallback(int32_t descriptor,
 DrmHwcTwo::HwcDisplay::HwcDisplay(ResourceManager *resource_manager,
                                   DrmDevice *drm,
                                   std::shared_ptr<Importer> importer,
+                                  const gralloc_module_t *gralloc,
                                   hwc2_display_t handle, HWC2::DisplayType type)
     : resource_manager_(resource_manager),
       drm_(drm),
       importer_(importer),
+      gralloc_(gralloc),
       handle_(handle),
       type_(type) {
   supported(__func__);
