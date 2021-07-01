@@ -64,7 +64,7 @@ int DrmEventListener::Init() {
 
 void DrmEventListener::RegisterHotplugHandler(DrmEventHandler *handler) {
   assert(!hotplug_handler_);
-  hotplug_handler_.reset(handler);
+  hotplug_handler_ = handler;
 }
 
 void DrmEventListener::FlipHandler(int /* fd */, unsigned int /* sequence */,
