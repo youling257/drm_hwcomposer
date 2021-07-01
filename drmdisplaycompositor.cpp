@@ -734,7 +734,7 @@ int DrmDisplayCompositor::FlattenOnDisplay(
   DrmHwcBuffer *writeback_buffer = &writeback_layer->buffer;
   writeback_layer->sf_handle = writeback_fb->buffer()->handle;
   ret = writeback_layer->ImportBuffer(
-      resource_manager_->GetImporter(display_).get());
+      resource_manager_->GetImporter(display_).get(), 0);
   if (ret) {
     ALOGE("Failed to import writeback buffer");
     return ret;
@@ -798,7 +798,7 @@ int DrmDisplayCompositor::FlattenSerial(DrmConnector *writeback_conn) {
   writeback_layer.display_frame = {0, 0, (int)mode_.mode.h_display(),
                                    (int)mode_.mode.v_display()};
   ret = writeback_layer.ImportBuffer(
-      resource_manager_->GetImporter(display_).get());
+      resource_manager_->GetImporter(display_).get(), 0);
   if (ret || writeback_comp->layers().size() != 1) {
     ALOGE("Failed to import writeback buffer");
     return ret;
@@ -896,7 +896,7 @@ int DrmDisplayCompositor::FlattenConcurrent(DrmConnector *writeback_conn) {
     ret = copy.InitFromDrmHwcLayer(&src_layer,
                                    resource_manager_
                                        ->GetImporter(writeback_conn->display())
-                                       .get());
+                                       .get(), 0);
     if (ret) {
       ALOGE("Failed to import buffer ret = %d", ret);
       return -EINVAL;
@@ -936,7 +936,7 @@ int DrmDisplayCompositor::FlattenConcurrent(DrmConnector *writeback_conn) {
                             (float)mode_.mode.v_display()};
   next_layer.display_frame = {0, 0, (int)mode_.mode.h_display(),
                               (int)mode_.mode.v_display()};
-  ret = next_layer.ImportBuffer(resource_manager_->GetImporter(display_).get());
+  ret = next_layer.ImportBuffer(resource_manager_->GetImporter(display_).get(), 0);
   if (ret) {
     ALOGE("Failed to import framebuffer for display %d", ret);
     return ret;
